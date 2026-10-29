@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration App</title>
@@ -65,7 +67,7 @@
     </style>
 </head>
 <body>
-    <div class="card">
+    <div class="card home-card">
         <h1>Welcome!</h1>
         <p>Create your account and get started.</p>
 
@@ -73,4 +75,5 @@
         <a href="/login/" class="login">Login</a>
     </div>
 </body>
+
 </html>

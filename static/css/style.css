@@ -1,0 +1,361 @@
+
+/* ==============================
+   COMMON STYLES
+============================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 30px 15px;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0e7ff, #fce7f3);
+    color: #1e293b;
+}
+
+.card {
+    width: 100%;
+    max-width: 760px;
+    margin: auto;
+    padding: 32px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px #00000018;
+}
+
+h1 {
+    text-align: center;
+    color: #3730a3;
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #334155;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: white;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #c7d2fe;
+    border-color: #6366f1;
+}
+
+
+/* ==============================
+   HOME PAGE
+============================== */
+
+body:has(.home-card) {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-card {
+    max-width: 480px;
+    padding: 40px 28px;
+    text-align: center;
+}
+
+.home-card h1 {
+    color: #3730a3;
+    margin-bottom: 12px;
+}
+
+.home-card p {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.home-card a {
+    display: block;
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    background: #4f46e5;
+    color: white;
+    font-weight: bold;
+}
+
+.home-card a:hover {
+    background: #3730a3;
+}
+
+.home-card a.login {
+    background: #0f766e;
+}
+
+.home-card a.login:hover {
+    background: #115e59;
+}
+
+
+/* ==============================
+   REGISTER PAGE
+============================== */
+
+.sub,
+.subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 28px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+.field {
+    margin-bottom: 8px;
+    min-width: 0;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+
+/* Password fields */
+
+.pass {
+    display: flex;
+    gap: 7px;
+    width: 100%;
+}
+
+.pass input {
+    flex: 1;
+    min-width: 0;
+}
+
+.pass button {
+    flex-shrink: 0;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 8px;
+    background: #e0e7ff;
+    color: #3730a3;
+    cursor: pointer;
+}
+
+
+/* Mobile number fields */
+
+.phone-group {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr);
+    gap: 8px;
+    width: 100%;
+}
+
+.phone-group select,
+.phone-group input {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 8px;
+}
+
+
+/* Hints and errors */
+
+.hint {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 7px 0 0;
+}
+
+.error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 13px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+
+/* Terms checkbox */
+
+.check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 22px 0;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.check input {
+    width: auto;
+    margin-top: 3px;
+}
+
+
+/* Register button */
+
+.submit {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit:hover {
+    background: #3730a3;
+}
+
+.bottom {
+    text-align: center;
+    margin-top: 22px;
+    color: #64748b;
+}
+
+.bottom a {
+    color: #4f46e5;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.bottom a:hover {
+    text-decoration: underline;
+}
+
+
+/* ==============================
+   LOGIN PAGE
+============================== */
+
+.login-card {
+    max-width: 420px;
+    padding: 35px;
+}
+
+.login-card h1 {
+    color: #303b70;
+}
+
+.login-card label {
+    margin: 16px 0 7px;
+    color: #333;
+}
+
+.login-card input {
+    font-size: 15px;
+    border-color: #d5d8e5;
+}
+
+.login-card input:focus {
+    outline: none;
+    border-color: #5967d8;
+}
+
+.pass-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pass-box input {
+    flex: 1;
+    min-width: 0;
+}
+
+.show-btn {
+    flex-shrink: 0;
+    padding: 10px;
+    border: none;
+    border-radius: 7px;
+    background: #eeeeff;
+    color: #454fc0;
+    cursor: pointer;
+}
+
+.login-btn {
+    width: 100%;
+    margin-top: 24px;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #505fd0;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background: #3948b5;
+}
+
+.login-card .error {
+    padding: 11px;
+    border-radius: 7px;
+    background: #ffe8e8;
+    color: #b42318;
+    font-size: 14px;
+}
+
+.login-card .bottom {
+    font-size: 14px;
+}
+
+.login-card a {
+    color: #505fd0;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+/* ==============================
+   MOBILE RESPONSIVE
+============================== */
+
+@media (max-width: 580px) {
+    .grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    .card {
+        padding: 22px 16px;
+    }
+
+    .phone-group {
+        grid-template-columns: 115px minmax(0, 1fr);
+    }
+
+    .login-card {
+        padding: 25px 20px;
+    }
+}
