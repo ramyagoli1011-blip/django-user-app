@@ -41,64 +41,101 @@ def register(request):
     password = data.get("password", "")
     confirm = data.get("confirm", "")
 
+    # Terms validation
     if not data.get("terms"):
-        return show_error(request, "Please accept the Terms and Conditions.")
+        return show_error(
+            request,
+            "Please accept the Terms and Conditions."
+        )
 
+    # Required fields
     if not name or not email or not dob or not username:
-        return show_error(request, "Please fill all required fields.")
+        return show_error(
+            request,
+            "Please fill all required fields."
+        )
 
+    # Username validation
     if not re.fullmatch(r"[A-Za-z0-9_]{4,30}", username):
         return show_error(
             request,
             "Username must contain 4-30 letters, numbers or underscores."
         )
 
+    # Email validation
     if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
-        return show_error(request, "Enter a valid email address.")
+        return show_error(
+            request,
+            "Enter a valid email address."
+        )
 
+    # Mobile validation
     if not re.fullmatch(r"[0-9]{10}", mobile):
-        return show_error(request, "Mobile number must contain 10 digits.")
+        return show_error(
+            request,
+            "Mobile number must contain 10 digits."
+        )
 
+    # PIN validation
     if not re.fullmatch(r"[0-9]{6}", pin):
-        return show_error(request, "PIN code must contain 6 digits.")
+        return show_error(
+            request,
+            "PIN code must contain 6 digits."
+        )
 
+    # Password validation
     if not re.fullmatch(
         r"(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}",
         password
     ):
+        return show_error(
+            request,
+            "Password must be at least 8 characters and include uppercase, lowercase, number and special character."
+        )
 
-    
-        except Exception as e:
-    print("REGISTRATION ERROR:", repr(e))
-
-    return show_error(
-        request,
-        "Registration service is unavailable. Please try again later."
-    )
-
+    # Confirm password
     if password != confirm:
-        return show_error(request, "Passwords do not match.")
+        return show_error(
+            request,
+            "Passwords do not match."
+        )
 
+    # Date of birth validation
     try:
         birth = date.fromisoformat(dob)
 
         if birth >= date.today():
-            return show_error(request, "Enter a valid date of birth.")
+            return show_error(
+                request,
+                "Enter a valid date of birth."
+            )
 
     except ValueError:
-        return show_error(request, "Enter a valid date of birth.")
+        return show_error(
+            request,
+            "Enter a valid date of birth."
+        )
 
+    # Photo validation
     photo = request.FILES.get("photo")
     photo_data = None
 
     if photo:
         if photo.size > 2 * 1024 * 1024:
-            return show_error(request, "Photo must be 2 MB or smaller.")
+            return show_error(
+                request,
+                "Photo must be 2 MB or smaller."
+            )
 
         if photo.content_type not in (
-            "image/jpeg", "image/png", "image/webp"
+            "image/jpeg",
+            "image/png",
+            "image/webp"
         ):
-            return show_error(request, "Upload a JPG, PNG or WEBP photo.")
+            return show_error(
+                request,
+                "Upload a JPG, PNG or WEBP photo."
+            )
 
         photo_data = {
             "name": photo.name,
@@ -106,14 +143,21 @@ def register(request):
             "data": photo.read()
         }
 
+    # Save user in MongoDB
     try:
         users = get_users()
 
         if users.find_one({"email": email}):
-            return show_error(request, "This email is already registered.")
+            return show_error(
+                request,
+                "This email is already registered."
+            )
 
         if users.find_one({"username": username}):
-            return show_error(request, "This username is already taken.")
+            return show_error(
+                request,
+                "This username is already taken."
+            )
 
         user = {
             "name": name,
@@ -135,7 +179,9 @@ def register(request):
 
         users.insert_one(user)
 
-    except Exception:
+    except Exception as e:
+        print("REGISTRATION ERROR:", repr(e))
+
         return show_error(
             request,
             "Registration service is unavailable. Please try again later."
@@ -174,7 +220,8 @@ def login(request):
         })
 
         if not user or not check_password(
-            password, user.get("password", "")
+            password,
+            user.get("password", "")
         ):
             return render(
                 request,
@@ -185,7 +232,9 @@ def login(request):
         request.session.cycle_key()
         request.session["user_id"] = str(user["_id"])
 
-    except Exception:
+    except Exception as e:
+        print("LOGIN ERROR:", repr(e))
+
         return render(
             request,
             "login.html",
@@ -219,7 +268,9 @@ def welcome(request):
             {"user": user}
         )
 
-    except Exception:
+    except Exception as e:
+        print("WELCOME ERROR:", repr(e))
+
         return render(
             request,
             "welcome.html",
