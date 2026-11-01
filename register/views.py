@@ -66,11 +66,15 @@ def register(request):
         r"(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}",
         password
     ):
-        return show_error(
-            request,
-            "Password needs 8 characters, uppercase, lowercase, "
-            "number and special character."
-        )
+
+    
+        except Exception as e:
+    print("REGISTRATION ERROR:", repr(e))
+
+    return show_error(
+        request,
+        "Registration service is unavailable. Please try again later."
+    )
 
     if password != confirm:
         return show_error(request, "Passwords do not match.")
