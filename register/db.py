@@ -20,6 +20,7 @@ if uri:
         uri,
         serverSelectionTimeoutMS=5000
     )
+
     db = client[db_name]
     users = db["users"]
 
@@ -27,7 +28,12 @@ if uri:
 def get_users():
     if users is None:
         raise RuntimeError(
-            "MongoDB Atlas connection is not configured."
+            "MongoDB connection is not configured. Check your .env file."
         )
+
+    try:
+        client.admin.command("ping")
+    except Exception as e:
+        raise RuntimeError("MongoDB connection failed.") from e
 
     return users

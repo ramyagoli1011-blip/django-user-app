@@ -2,6 +2,7 @@
 import re
 from datetime import date
 
+from bson import ObjectId
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.decorators.http import require_http_methods
@@ -76,8 +77,10 @@ def register(request):
 
     try:
         birth = date.fromisoformat(dob)
+
         if birth >= date.today():
             return show_error(request, "Enter a valid date of birth.")
+
     except ValueError:
         return show_error(request, "Enter a valid date of birth.")
 
@@ -189,10 +192,35 @@ def login(request):
 
 
 def welcome(request):
-    if not request.session.get("user_id"):
+    uid = request.session.get("user_id")
+
+    if not uid:
         return redirect("/login/")
 
-    return render(request, "welcome.html")
+    try:
+        users = get_users()
+
+        user = users.find_one(
+            {"_id": ObjectId(uid)},
+            {"password": 0}
+        )
+
+        if not user:
+            request.session.flush()
+            return redirect("/login/")
+
+        return render(
+            request,
+            "welcome.html",
+            {"user": user}
+        )
+
+    except Exception:
+        return render(
+            request,
+            "welcome.html",
+            {"error": "Unable to load user details."}
+        )
 
 
 def logout(request):

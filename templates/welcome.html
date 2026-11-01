@@ -4,89 +4,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome | Registration App</title>
+    <title>My Profile</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #e8efff, #f8eaff);
+            background: #f2f4f8;
+            margin: 0;
+            padding: 30px;
         }
 
         .card {
-            width: 100%;
-            max-width: 500px;
-            padding: 40px 30px;
-            text-align: center;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 30px;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
         }
 
-        .check {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: #e1f8e9;
-            color: #159447;
-            font-size: 42px;
+        h1, h2 {
+            color: #263238;
         }
 
-        h1 {
-            margin-bottom: 12px;
-            color: #303b70;
+        .detail {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
         }
 
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .logout-btn {
+        .detail b {
             display: inline-block;
-            margin-top: 20px;
-            padding: 12px 28px;
-            border-radius: 8px;
-            background: #505fd0;
+            width: 150px;
+        }
+
+        .logout {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 20px;
+            background: #d32f2f;
             color: white;
             text-decoration: none;
-            font-weight: bold;
-        }
-
-        .logout-btn:hover {
-            background: #3948b5;
+            border-radius: 5px;
         }
     </style>
 </head>
 
 <body>
+
     <div class="card">
-        <div class="check">&#10003;</div>
 
-        <h1>Welcome!</h1>
+        {% if error %}
+            <h2>{{ error }}</h2>
+        {% else %}
 
-        <p>
-            You have successfully logged in to your account.
-        </p>
+            <h1>Welcome, {{ user.name }}!</h1>
+            <h2>Your Profile Details</h2>
 
-        <p>
-            Thank you for using our Registration Application.
-        </p>
+            <div class="detail"><b>Name:</b> {{ user.name }}</div>
+            <div class="detail"><b>Date of Birth:</b> {{ user.dob }}</div>
+            <div class="detail"><b>Gender:</b> {{ user.gender }}</div>
+            <div class="detail"><b>Email:</b> {{ user.email }}</div>
+            <div class="detail"><b>Mobile:</b> {{ user.code }} {{ user.mobile }}</div>
+            <div class="detail"><b>Address:</b> {{ user.address }}</div>
+            <div class="detail"><b>Country:</b> {{ user.country }}</div>
+            <div class="detail"><b>State:</b> {{ user.state }}</div>
+            <div class="detail"><b>District:</b> {{ user.district }}</div>
+            <div class="detail"><b>City:</b> {{ user.city }}</div>
+            <div class="detail"><b>PIN Code:</b> {{ user.pin }}</div>
+            <div class="detail"><b>Username:</b> {{ user.username }}</div>
 
-        <a href="/login/" class="logout-btn">Logout</a>
+        {% endif %}
+
+        <a href="/logout/" class="logout">Logout</a>
+
     </div>
+
 </body>
 </html>
