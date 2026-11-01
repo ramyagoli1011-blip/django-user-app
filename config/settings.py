@@ -121,8 +121,8 @@ STORAGES = {
 # Default primary key
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
 # Session security
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
