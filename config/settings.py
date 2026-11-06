@@ -1,4 +1,3 @@
-
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -7,6 +6,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
 
+SUPER_ADMIN_EMAIL = os.getenv("SUPER_ADMIN_EMAIL")
+SUPER_ADMIN_PASSWORD = os.getenv("SUPER_ADMIN_PASSWORD")
 
 # Security settings
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
@@ -28,6 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "register",
+    'admin_panel',
 ]
 
 

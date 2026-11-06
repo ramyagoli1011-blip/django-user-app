@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -160,6 +161,20 @@
             text-decoration: none;
         }
 
+        .phone-group {
+            display: flex;
+            gap: 7px;
+        }
+
+        .phone-group select {
+            flex: 0 0 42%;
+        }
+
+        .phone-group input {
+            flex: 1;
+            width: 0;
+        }
+
         @media (max-width: 580px) {
             .grid {
                 grid-template-columns: 1fr;
@@ -185,7 +200,8 @@
             <div class="error" role="alert">{{ error }}</div>
         {% endif %}
 
-        <form method="post"
+        <form id="regForm"
+              method="post"
               action="/register/"
               enctype="multipart/form-data">
 
@@ -196,22 +212,24 @@
                 <div class="field">
                     <label for="name">Full Name *</label>
                     <input id="name" name="name" type="text"
+                           value="{{ form_data.name|default:'' }}"
                            maxlength="100" autocomplete="name" required>
                 </div>
 
                 <div class="field">
                     <label for="dob">Date of Birth *</label>
-                    <input id="dob" name="dob" type="date" required>
+                    <input id="dob" name="dob" type="date"
+                           value="{{ form_data.dob|default:'' }}" required>
                 </div>
 
                 <div class="field">
                     <label for="gender">Gender *</label>
                     <select id="gender" name="gender" required>
                         <option value="">Select gender</option>
-                        <option value="Female">Female</option>
-                        <option value="Male">Male</option>
-                        <option value="Other">Other</option>
-                        <option value="Prefer not to say">Prefer not to say</option>
+                        <option value="Female" {% if form_data.gender == "Female" %}selected{% endif %}>Female</option>
+                        <option value="Male" {% if form_data.gender == "Male" %}selected{% endif %}>Male</option>
+                        <option value="Other" {% if form_data.gender == "Other" %}selected{% endif %}>Other</option>
+                        <option value="Prefer not to say" {% if form_data.gender == "Prefer not to say" %}selected{% endif %}>Prefer not to say</option>
                     </select>
                 </div>
 
@@ -225,6 +243,7 @@
                 <div class="field">
                     <label for="email">Email Address *</label>
                     <input id="email" name="email" type="email"
+                           value="{{ form_data.email|default:'' }}"
                            maxlength="254" autocomplete="email" required>
                 </div>
 
@@ -232,15 +251,16 @@
                     <label for="mobile">Mobile Number *</label>
                     <div class="phone-group">
                         <select id="code" name="code" aria-label="Country code" required>
-                            <option value="+91">India +91</option>
-                            <option value="+1">USA +1</option>
-                            <option value="+44">UK +44</option>
-                            <option value="+61">Australia +61</option>
-                            <option value="+971">UAE +971</option>
+                            <option value="+91" {% if form_data.code == "+91" or not form_data.code %}selected{% endif %}>India +91</option>
+                            <option value="+1" {% if form_data.code == "+1" %}selected{% endif %}>USA +1</option>
+                            <option value="+44" {% if form_data.code == "+44" %}selected{% endif %}>UK +44</option>
+                            <option value="+61" {% if form_data.code == "+61" %}selected{% endif %}>Australia +61</option>
+                            <option value="+971" {% if form_data.code == "+971" %}selected{% endif %}>UAE +971</option>
                             <option value="+1">Canada +1</option>
                         </select>
 
                         <input id="mobile" name="mobile" type="tel"
+                               value="{{ form_data.mobile|default:'' }}"
                                inputmode="numeric" pattern="[0-9]{10}"
                                maxlength="10" placeholder="10 digits"
                                autocomplete="tel-national" required>
@@ -251,13 +271,13 @@
                     <label for="address">Full Address *</label>
                     <textarea id="address" name="address" rows="3"
                               maxlength="500" autocomplete="street-address"
-                              required></textarea>
+                              required>{{ form_data.address|default:'' }}</textarea>
                 </div>
 
                 <div class="field">
                     <label for="country">Country *</label>
                     <select id="country" name="country" required>
-                        <option value="India">India</option>
+                        <option value="India" selected>India</option>
                     </select>
                 </div>
 
@@ -278,45 +298,39 @@
                 <div class="field">
                     <label for="city">City / Town *</label>
                     <input id="city" name="city" type="text"
+                           value="{{ form_data.city|default:'' }}"
                            maxlength="100" autocomplete="address-level2" required>
                 </div>
 
                 <div class="field">
                     <label for="pin">PIN Code *</label>
                     <input id="pin" name="pin" type="text"
+                           value="{{ form_data.pin|default:'' }}"
                            inputmode="numeric" pattern="[0-9]{6}"
                            maxlength="6" autocomplete="postal-code" required>
                 </div>
 
-                <div class="field">
-                    <label for="username">Username *</label>
-                    <input id="username" name="username" type="text"
-                           minlength="4" maxlength="30"
-                           pattern="[A-Za-z0-9_]+"
-                           autocomplete="username" required>
-                    <p class="hint">Use 4–30 letters, numbers or underscores.</p>
-                </div>
-
+                <!-- Password -->
                 <div class="field">
                     <label for="password">Password *</label>
                     <div class="pass">
                         <input id="password" name="password" type="password"
-                               minlength="8" autocomplete="new-password" required>
+                               minlength="4" autocomplete="new-password" required>
                         <button type="button"
                                 onclick="showPass('password', this)">Show</button>
                     </div>
                     <p class="hint">
-                        Minimum 8 characters, uppercase, lowercase,
-                        number and special character.
+                        Minimum 4 characters. Use letters with numbers or special characters.
                     </p>
                     <p id="strength" class="hint">Password strength: —</p>
                 </div>
 
+                <!-- Confirm Password -->
                 <div class="field">
                     <label for="confirm">Confirm Password *</label>
                     <div class="pass">
                         <input id="confirm" name="confirm" type="password"
-                               minlength="8" autocomplete="new-password" required>
+                               minlength="4" autocomplete="new-password" required>
                         <button type="button"
                                 onclick="showPass('confirm', this)">Show</button>
                     </div>
@@ -326,7 +340,8 @@
             </div>
 
             <label class="check">
-                <input type="checkbox" name="terms" required>
+                <input type="checkbox" id="terms" name="terms"
+                       {% if form_data.terms %}checked{% endif %} required>
                 <span>I agree to the Terms and Conditions. *</span>
             </label>
 
@@ -355,16 +370,23 @@
             const p = pass.value;
             let score = 0;
 
-            if (p.length >= 8) score++;
-            if (/[A-Z]/.test(p)) score++;
-            if (/[a-z]/.test(p)) score++;
+            if (p.length >= 4) score++;
+            if (/[A-Za-z]/.test(p)) score++;
             if (/[0-9]/.test(p)) score++;
             if (/[^A-Za-z0-9]/.test(p)) score++;
+            if (p.length >= 8) score++;
 
-            const labels = ["Very weak", "Weak", "Fair", "Good", "Strong", "Strong"];
+            let level = "—";
 
-            strength.textContent = "Password strength: " +
-                (p ? labels[score] : "—");
+            if (p.length > 0 && p.length < 4) {
+                level = "Very Weak";
+            } else if (p.length >= 4) {
+                if (score <= 2) level = "Medium";
+                else if (score <= 3) level = "Good";
+                else level = "Strong";
+            }
+
+            strength.textContent = "Password strength: " + level;
 
             confirm.setCustomValidity(
                 confirm.value && confirm.value !== p
@@ -382,30 +404,45 @@
         pass.addEventListener("input", checkPass);
         confirm.addEventListener("input", checkPass);
 
+        // State and district list
         const states = {
             "Andhra Pradesh": [
                 "Alluri Sitharama Raju", "Anakapalli", "Anantapur",
-                "Annamayya", "Bapatla", "Chittoor", "Dr. B. R. Ambedkar Konaseema",
-                "East Godavari", "Eluru", "Guntur", "Kakinada", "Krishna",
-                "Kurnool", "Nandyal", "NTR", "Palnadu", "Parvathipuram Manyam",
-                "Prakasam", "Sri Potti Sriramulu Nellore", "Sri Sathya Sai",
-                "Srikakulam", "Tirupati", "Visakhapatnam", "Vizianagaram",
-                "West Godavari", "YSR Kadapa"
+                "Annamayya", "Bapatla", "Chittoor",
+                "Dr. B. R. Ambedkar Konaseema", "East Godavari",
+                "Eluru", "Guntur", "Kakinada", "Krishna",
+                "Kurnool", "Nandyal", "NTR", "Palnadu",
+                "Parvathipuram Manyam", "Prakasam",
+                "Sri Potti Sriramulu Nellore", "Sri Sathya Sai",
+                "Srikakulam", "Tirupati", "Visakhapatnam",
+                "Vizianagaram", "West Godavari", "YSR Kadapa"
             ],
+
             "Telangana": [
                 "Adilabad", "Bhadradri Kothagudem", "Hanumakonda",
-                "Hyderabad", "Jagtial", "Jangaon", "Jayashankar Bhupalpally",
-                "Jogulamba Gadwal", "Kamareddy", "Karimnagar", "Khammam",
-                "Komaram Bheem Asifabad", "Mahabubabad", "Mahabubnagar",
-                "Mancherial", "Medak", "Medchal-Malkajgiri", "Mulugu",
-                "Nagarkurnool", "Nalgonda", "Narayanpet", "Nirmal",
-                "Nizamabad", "Peddapalli", "Rajanna Sircilla", "Rangareddy",
+                "Hyderabad", "Jagtial", "Jangaon",
+                "Jayashankar Bhupalpally", "Jogulamba Gadwal",
+                "Kamareddy", "Karimnagar", "Khammam",
+                "Komaram Bheem Asifabad", "Mahabubabad",
+                "Mahabubnagar", "Mancherial", "Medak",
+                "Medchal-Malkajgiri", "Mulugu", "Nagarkurnool",
+                "Nalgonda", "Narayanpet", "Nirmal", "Nizamabad",
+                "Peddapalli", "Rajanna Sircilla", "Rangareddy",
                 "Sangareddy", "Siddipet", "Suryapet", "Vikarabad",
                 "Wanaparthy", "Warangal", "Yadadri Bhuvanagiri"
             ],
-            "Karnataka": ["Bengaluru Urban", "Mysuru", "Belagavi", "Dharwad"],
-            "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Salem"],
-            "Maharashtra": ["Mumbai City", "Pune", "Nagpur", "Nashik"]
+
+            "Karnataka": [
+                "Bengaluru Urban", "Mysuru", "Belagavi", "Dharwad"
+            ],
+
+            "Tamil Nadu": [
+                "Chennai", "Coimbatore", "Madurai", "Salem"
+            ],
+
+            "Maharashtra": [
+                "Mumbai City", "Pune", "Nagpur", "Nashik"
+            ]
         };
 
         const stateSelect = document.getElementById("state");
@@ -418,20 +455,78 @@
             stateSelect.appendChild(opt);
         });
 
-        stateSelect.addEventListener("change", function() {
+        function fillDistricts(state, selectedDistrict) {
             districtSelect.innerHTML =
                 '<option value="">Select district</option>';
 
-            const list = states[this.value] || [];
+            const list = states[state] || [];
             districtSelect.disabled = list.length === 0;
 
             list.forEach(function(district) {
                 const opt = document.createElement("option");
                 opt.value = district;
                 opt.textContent = district;
+
+                if (district === selectedDistrict) {
+                    opt.selected = true;
+                }
+
                 districtSelect.appendChild(opt);
             });
+        }
+
+        stateSelect.addEventListener("change", function() {
+            fillDistricts(this.value, "");
+        });
+
+        // Restore state and district after validation error
+        const savedState = "{{ form_data.state|default:''|escapejs }}";
+        const savedDistrict = "{{ form_data.district|default:''|escapejs }}";
+
+        if (savedState) {
+            stateSelect.value = savedState;
+            fillDistricts(savedState, savedDistrict);
+        }
+
+        // Enter key moves to the next field
+        const form = document.getElementById("regForm");
+
+        form.addEventListener("keydown", function(e) {
+            if (e.key !== "Enter") return;
+
+            const current = e.target;
+
+            if (
+                !current.matches("input, select, textarea") ||
+                current.type === "submit" ||
+                current.type === "button"
+            ) {
+                return;
+            }
+
+            if (current.tagName === "TEXTAREA" && e.shiftKey) {
+                return;
+            }
+
+            e.preventDefault();
+
+            const fields = Array.from(
+                form.querySelectorAll(
+                    'input:not([type="hidden"]):not([type="submit"]), select, textarea'
+                )
+            ).filter(function(field) {
+                return !field.disabled && field.offsetParent !== null;
+            });
+
+            const index = fields.indexOf(current);
+
+            if (index >= 0 && index < fields.length - 1) {
+                fields[index + 1].focus();
+            } else {
+                form.requestSubmit();
+            }
         });
     </script>
 </body>
+
 </html>

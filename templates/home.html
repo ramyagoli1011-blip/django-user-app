@@ -2,78 +2,320 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration App</title>
+    <title>Welcome | User Portal</title>
+
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
         }
 
         body {
-            margin: 0;
             min-height: 100vh;
+            background: linear-gradient(135deg, #eef2ff, #fdf2f8, #ecfeff);
+            color: #252545;
+        }
+
+        /* Navigation */
+
+        nav {
+            width: 100%;
+            padding: 20px 8%;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #e0e7ff, #fce7f3);
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 3px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #5546c7;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #44445d;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #6655df;
+        }
+
+        /* Main Section */
+
+        .main {
+            min-height: calc(100vh - 75px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 65px 20px;
+        }
+
+        .tag {
+            background: #e6e4ff;
+            color: #5b4bd8;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .main h1 {
+            font-size: clamp(32px, 5vw, 49px);
+            text-align: center;
+            color: #252545;
+            margin-bottom: 15px;
+        }
+
+        .main h1 span {
+            color: #6655df;
+        }
+
+        .subtitle {
+            max-width: 570px;
+            text-align: center;
+            color: #71718a;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 45px;
+        }
+
+        /* Cards */
+
+        .cards {
+            width: 100%;
+            max-width: 780px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
         }
 
         .card {
-            width: 90%;
-            max-width: 480px;
-            padding: 40px 28px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px 28px;
+            border-radius: 22px;
             text-align: center;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 12px 35px #00000018;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 12px 35px rgba(62, 55, 130, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        h1 {
-            color: #3730a3;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(62, 55, 130, 0.15);
+        }
+
+        .card-icon {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 22px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+        }
+
+        .register-icon {
+            background: #eeebff;
+        }
+
+        .login-icon {
+            background: #e4f8f1;
+        }
+
+        .card h2 {
+            font-size: 23px;
             margin-bottom: 12px;
+            color: #292944;
         }
 
-        p {
-            color: #64748b;
-            line-height: 1.6;
+        .card p {
+            color: #77778b;
+            font-size: 14px;
+            line-height: 1.7;
+            min-height: 48px;
+            margin-bottom: 25px;
         }
 
-        a {
-            display: block;
-            margin-top: 18px;
-            padding: 14px;
-            border-radius: 10px;
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 12px;
             text-decoration: none;
-            background: #4f46e5;
+            font-size: 15px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .register-btn {
+            background: #6655df;
             color: white;
-            font-weight: bold;
         }
 
-        a:hover {
-            background: #3730a3;
+        .register-btn:hover {
+            background: #5040c4;
         }
 
-        .login {
-            background: #0f766e;
+        .login-btn {
+            background: #159b70;
+            color: white;
         }
 
-        .login:hover {
-            background: #115e59;
+        .login-btn:hover {
+            background: #087e59;
+        }
+
+        /* Bottom text */
+
+        .bottom-text {
+            margin-top: 38px;
+            color: #85859a;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 18px;
+            color: #88889b;
+            font-size: 12px;
+        }
+
+        /* Mobile Responsive */
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 17px 5%;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .nav-links {
+                gap: 13px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .main {
+                padding: 55px 18px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+                margin-bottom: 32px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+                max-width: 370px;
+                gap: 18px;
+            }
+
+            .card {
+                padding: 28px 23px;
+            }
+
+            .bottom-text {
+                margin-top: 28px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="card home-card">
-        <h1>Welcome!</h1>
-        <p>Create your account and get started.</p>
 
-        <a href="/register/">Create Account</a>
-        <a href="/login/" class="login">Login</a>
-    </div>
+    <nav>
+        <div class="logo">User Portal</div>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/register/">Register</a>
+            <a href="/login/">Login</a>
+        </div>
+    </nav>
+
+    <main class="main">
+
+        <div class="tag">WELCOME TO OUR PORTAL</div>
+
+        <h1>Your Journey <span>Starts Here</span></h1>
+
+        <p class="subtitle">
+            Welcome to our user portal. Create your account to get started,
+            or log in to access your existing account.
+            Your account is just a few steps away!
+        </p>
+
+        <div class="cards">
+
+            <!-- Register Card -->
+
+            <div class="card">
+                <div class="card-icon register-icon">✦</div>
+
+                <h2>Create Account</h2>
+
+                <p>
+                    New here? Register with your details
+                    and create your personal account.
+                </p>
+
+                <a href="/register/" class="btn register-btn">
+                    Register Now →
+                </a>
+            </div>
+
+            <!-- Login Card -->
+
+            <div class="card">
+                <div class="card-icon login-icon">↪</div>
+
+                <h2>Welcome Back</h2>
+
+                <p>
+                    Already have an account?
+                    Log in to continue to your personal dashboard.
+                </p>
+
+                <a href="/login/" class="btn login-btn">
+                    Login Now →
+                </a>
+            </div>
+
+        </div>
+
+        <p class="bottom-text">
+            Simple • Secure • Easy to Use
+        </p>
+
+    </main>
+
+    <footer>
+        © 2026 User Portal. All Rights Reserved.
+    </footer>
+
 </body>
-
 </html>

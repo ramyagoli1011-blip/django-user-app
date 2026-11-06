@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin List</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px;
+            background: #f2f4f8;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        h2 {
+            color: #263b70;
+        }
+
+        .table-box {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background: #eef1f8;
+            color: #263b70;
+        }
+
+        button {
+            padding: 8px 13px;
+            border: none;
+            border-radius: 5px;
+            background: #dc3545;
+            color: white;
+            cursor: pointer;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #263b70;
+        }
+
+        .empty {
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Admin Management</h2>
+        <p>Manage all admin accounts</p>
+
+        <div class="table-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for admin in admins %}
+                    <tr>
+                        <td>{{ admin.name|default:"Super Admin" }}</td>
+                        <td>{{ admin.email }}</td>
+                        <td>{{ admin.role }}</td>
+
+                        <td>
+                            {% if admin.role != "super_admin" %}
+                            <form method="POST"
+                                  action="/admin-panel/delete-admin/{{ admin.id }}/"
+                                  onsubmit="return confirm('Delete this admin?');">
+                                {% csrf_token %}
+                                <button type="submit">Delete</button>
+                            </form>
+                            {% else %}
+                                Protected
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="empty">
+                            No admins found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="/admin-panel/dashboard/" class="back">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+</body>
+</html>

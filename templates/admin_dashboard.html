@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fa;
+            color: #222;
+        }
+
+        header {
+            background: #263b70;
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+        }
+
+        header h2 {
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .logout {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: #263b70;
+            padding: 11px 20px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .logout:hover {
+            background: #e5eaf5;
+        }
+
+        .container {
+            padding: 30px 5%;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .box {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .count {
+            font-size: 30px;
+            color: #263b70;
+            font-weight: bold;
+        }
+
+        .table-box {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        th {
+            background: #eef1f8;
+            color: #263b70;
+        }
+
+        tr:hover {
+            background: #fafbff;
+        }
+
+        .photo {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .no-photo {
+            color: #999;
+        }
+
+     
+        /* Tablet */
+        @media (max-width: 800px) {
+            header {
+                padding: 20px;
+                flex-direction: column;
+                align-items: center;
+                gap: 18px;
+            }
+
+            header h2 {
+                text-align: center;
+            }
+
+            .header-buttons {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: nowrap;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .logout {
+                flex: 1;
+                max-width: 180px;
+                text-align: center;
+                padding: 11px 10px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            header {
+                padding: 18px 12px;
+            }
+
+            header h2 {
+                font-size: 21px;
+                text-align: center;
+            }
+
+            .header-buttons {
+                flex-direction: row;
+                justify-content: center;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .logout {
+                flex: 1;
+                min-width: 0;
+                max-width: none;
+                padding: 11px 5px;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .container {
+                padding: 20px 12px;
+            }
+
+            .box {
+                padding: 16px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <h2>Admin Dashboard</h2>
+
+        <div class="header-buttons">
+            {% if admin_role == "super_admin" %}
+                <a href="/admin-panel/add-admin/" class="logout">
+                    Add Admin
+                </a>
+
+                <a href="/admin-panel/admins/" class="logout">
+                    Manage Admins
+                </a>
+            {% endif %}
+
+            <a href="/admin-panel/logout/" class="logout">
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="welcome">
+            <h2>Welcome, Admin</h2>
+            <p>{{ admin_email }}</p>
+        </div>
+
+        <div class="box">
+            <h3>Total Registered Users</h3>
+            <div class="count">{{ total }}</div>
+        </div>
+
+        <div class="box">
+            <h3>Registered Users Details</h3>
+
+            <div class="table-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Full Name</th>
+                            <th>DOB</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Address</th>
+                            <th>Country</th>
+                            <th>State</th>
+                            <th>District</th>
+                            <th>City</th>
+                            <th>PIN</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>
+                                {% if user.photo %}
+                                    <img src="{{ user.photo }}" class="photo" alt="Profile">
+                                {% else %}
+                                    <span class="no-photo">No photo</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.dob }}</td>
+                            <td>{{ user.gender }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.code }} {{ user.mobile }}</td>
+                            <td>{{ user.address }}</td>
+                            <td>{{ user.country }}</td>
+                            <td>{{ user.state }}</td>
+                            <td>{{ user.district }}</td>
+                            <td>{{ user.city }}</td>
+                            <td>{{ user.pin }}</td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="12">No registered users found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

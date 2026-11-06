@@ -142,12 +142,12 @@
         <form method="POST" action="/login/">
             {% csrf_token %}
 
-            <label for="username">Username or Email</label>
+            <label for="login_id">Email or Mobile Number</label>
             <input
                 type="text"
-                id="username"
-                name="username"
-                placeholder="Enter username or email"
+                id="login_id"
+                name="login_id"
+                placeholder="Enter email or mobile number"
                 autocomplete="username"
                 required
             >

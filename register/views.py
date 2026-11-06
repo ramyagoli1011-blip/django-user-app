@@ -14,8 +14,24 @@ def home(request):
     return render(request, "home.html")
 
 
-def show_error(request, msg):
-    return render(request, "register.html", {"error": msg})
+def show_error(request, msg, data=None, clear_fields=None):
+    values = data.dict() if data else {}
+
+    values.pop("password", None)
+    values.pop("confirm", None)
+    values.pop("csrfmiddlewaretoken", None)
+
+    for field in (clear_fields or []):
+        values.pop(field, None)
+
+    return render(
+        request,
+        "register.html",
+        {
+            "error": msg,
+            "form_data": values
+        }
+    )
 
 
 @require_http_methods(["GET", "POST"])
@@ -37,67 +53,85 @@ def register(request):
     district = data.get("district", "")
     city = data.get("city", "").strip()
     pin = data.get("pin", "").strip()
-    username = data.get("username", "").strip()
     password = data.get("password", "")
     confirm = data.get("confirm", "")
+
+    # Required fields
+    required = [
+        "name", "dob", "gender", "email", "code", "mobile",
+        "address", "country", "state", "district", "city",
+        "pin", "password", "confirm"
+    ]
+
+    missing = [
+        field for field in required
+        if not data.get(field, "").strip()
+    ]
+
+    if missing:
+        return show_error(
+            request,
+            "Please fill all required fields.",
+            data,
+            missing
+        )
 
     # Terms validation
     if not data.get("terms"):
         return show_error(
             request,
-            "Please accept the Terms and Conditions."
-        )
-
-    # Required fields
-    if not name or not email or not dob or not username:
-        return show_error(
-            request,
-            "Please fill all required fields."
-        )
-
-    # Username validation
-    if not re.fullmatch(r"[A-Za-z0-9_]{4,30}", username):
-        return show_error(
-            request,
-            "Username must contain 4-30 letters, numbers or underscores."
+            "Please accept the Terms and Conditions.",
+            data,
+            ["terms"]
         )
 
     # Email validation
     if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
         return show_error(
             request,
-            "Enter a valid email address."
+            "Enter a valid email address.",
+            data,
+            ["email"]
         )
 
     # Mobile validation
     if not re.fullmatch(r"[0-9]{10}", mobile):
         return show_error(
             request,
-            "Mobile number must contain 10 digits."
+            "Mobile number must contain 10 digits.",
+            data,
+            ["mobile"]
         )
 
     # PIN validation
     if not re.fullmatch(r"[0-9]{6}", pin):
         return show_error(
             request,
-            "PIN code must contain 6 digits."
+            "PIN code must contain 6 digits.",
+            data,
+            ["pin"]
         )
 
     # Password validation
-    if not re.fullmatch(
-        r"(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}",
-        password
+    if (
+        len(password) < 4
+        or not re.search(r"[A-Za-z]", password)
+        or not re.search(r"[^A-Za-z]", password)
     ):
         return show_error(
             request,
-            "Password must be at least 8 characters and include uppercase, lowercase, number and special character."
+            "Password must be at least 4 characters and contain letters with numbers or special characters.",
+            data,
+            ["password", "confirm"]
         )
 
     # Confirm password
     if password != confirm:
         return show_error(
             request,
-            "Passwords do not match."
+            "Passwords do not match.",
+            data,
+            ["password", "confirm"]
         )
 
     # Date of birth validation
@@ -107,13 +141,17 @@ def register(request):
         if birth >= date.today():
             return show_error(
                 request,
-                "Enter a valid date of birth."
+                "Enter a valid date of birth.",
+                data,
+                ["dob"]
             )
 
     except ValueError:
         return show_error(
             request,
-            "Enter a valid date of birth."
+            "Enter a valid date of birth.",
+            data,
+            ["dob"]
         )
 
     # Photo validation
@@ -124,7 +162,8 @@ def register(request):
         if photo.size > 2 * 1024 * 1024:
             return show_error(
                 request,
-                "Photo must be 2 MB or smaller."
+                "Photo must be 2 MB or smaller.",
+                data
             )
 
         if photo.content_type not in (
@@ -134,7 +173,8 @@ def register(request):
         ):
             return show_error(
                 request,
-                "Upload a JPG, PNG or WEBP photo."
+                "Upload a JPG, PNG or WEBP photo.",
+                data
             )
 
         photo_data = {
@@ -150,13 +190,17 @@ def register(request):
         if users.find_one({"email": email}):
             return show_error(
                 request,
-                "This email is already registered."
+                "This email is already registered.",
+                data,
+                ["email"]
             )
 
-        if users.find_one({"username": username}):
+        if users.find_one({"mobile": mobile}):
             return show_error(
                 request,
-                "This username is already taken."
+                "This mobile number is already registered.",
+                data,
+                ["mobile"]
             )
 
         user = {
@@ -172,7 +216,6 @@ def register(request):
             "district": district,
             "city": city,
             "pin": pin,
-            "username": username,
             "password": make_password(password),
             "photo": photo_data,
         }
@@ -184,7 +227,8 @@ def register(request):
 
         return show_error(
             request,
-            "Registration service is unavailable. Please try again later."
+            "Registration service is unavailable. Please try again later.",
+            data
         )
 
     return redirect("/success/")
@@ -199,25 +243,31 @@ def login(request):
     if request.method == "GET":
         return render(request, "login.html")
 
-    value = request.POST.get("username", "").strip()
+    value = (
+        request.POST.get("login_id")
+        or request.POST.get("username")
+        or request.POST.get("email")
+        or request.POST.get("mobile")
+        or ""
+    ).strip()
+
     password = request.POST.get("password", "")
 
     if not value or not password:
         return render(
             request,
             "login.html",
-            {"error": "Enter your username/email and password."}
+            {"error": "Enter your email or mobile number and password."}
         )
 
     try:
         users = get_users()
 
-        user = users.find_one({
-            "$or": [
-                {"username": value},
-                {"email": value.lower()}
-            ]
-        })
+        # Email or mobile number login
+        if "@" in value:
+            user = users.find_one({"email": value.lower()})
+        else:
+            user = users.find_one({"mobile": value})
 
         if not user or not check_password(
             password,
@@ -226,7 +276,7 @@ def login(request):
             return render(
                 request,
                 "login.html",
-                {"error": "Invalid username/email or password."}
+                {"error": "Invalid email/mobile number or password."}
             )
 
         request.session.cycle_key()
