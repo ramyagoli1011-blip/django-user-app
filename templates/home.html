@@ -202,46 +202,92 @@
 
         /* Mobile Responsive */
 
-        @media (max-width: 600px) {
-            nav {
-                padding: 17px 5%;
-            }
+@media (max-width: 600px) {
+    nav {
+        padding: 12px 5%;
+    }
 
-            .logo {
-                font-size: 20px;
-            }
+    .logo {
+        font-size: 18px;
+    }
 
-            .nav-links {
-                gap: 13px;
-            }
+    .nav-links {
+        gap: 12px;
+    }
 
-            .nav-links a {
-                font-size: 12px;
-            }
+    .nav-links a {
+        font-size: 11px;
+    }
 
-            .main {
-                padding: 55px 18px;
-            }
+    .main {
+        min-height: calc(100dvh - 55px);
+        padding: 15px 14px;
+        justify-content: center;
+    }
 
-            .subtitle {
-                font-size: 14px;
-                margin-bottom: 32px;
-            }
+    .tag {
+        font-size: 10px;
+        padding: 6px 12px;
+        margin-bottom: 12px;
+    }
 
-            .cards {
-                grid-template-columns: 1fr;
-                max-width: 370px;
-                gap: 18px;
-            }
+    .main h1 {
+        font-size: 27px;
+        margin-bottom: 8px;
+    }
 
-            .card {
-                padding: 28px 23px;
-            }
+    .subtitle {
+        font-size: 12px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
 
-            .bottom-text {
-                margin-top: 28px;
-            }
-        }
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .card {
+        padding: 14px 8px;
+        min-height: 0;
+        border-radius: 15px;
+    }
+
+    .card-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 23px;
+        margin-bottom: 10px;
+        border-radius: 13px;
+    }
+
+    .card h2 {
+        font-size: 16px;
+        margin-bottom: 7px;
+    }
+
+    .card p {
+        font-size: 11px;
+        line-height: 1.4;
+        min-height: 0;
+        margin-bottom: 12px;
+    }
+
+    .btn {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+
+    .bottom-text {
+        margin-top: 16px;
+        font-size: 10px;
+    }
+
+    footer {
+        padding: 8px;
+        font-size: 10px;
+    }
+}
     </style>
 </head>
 
